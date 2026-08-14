@@ -12,7 +12,11 @@
 
 #define maxDutyCicle 255 //max 255
 
-#define zonaMorta 30 //max 255
+#define zonaMortaMaior1 60 //max 255
+#define zonaMortaMenor1 10 //max 255
+
+#define zonaMortaMaior2 40 //max 255
+#define zonaMortaMenor2 -40 //max 255
 
 void setup() {
   PS4.begin(macAdd);
@@ -35,13 +39,14 @@ void loop() {
     int RStickY = PS4.RStickY();
     int LStickY = PS4.LStickY();
 
-    int Motor1Output = constrain(map(LStickY, -127, 127, -maxDutyCicle, maxDutyCicle), -255, 255);
+    int Motor1Output = constrain(map(LStickY, -127, 127, -maxDutyCicle, maxDutyCicle), -255, 255); // mude os primeiros valores de acordo com o RStickY e X
     int Motor2Output = constrain(map(RStickY, -127, 127, -maxDutyCicle, maxDutyCicle), -255, 255);
 
-    if (Motor1Output > zonaMorta) {
+
+    if (Motor1Output > zonaMortaMaior1) {
       analogWrite(motor1RPWM, Motor1Output);
       analogWrite(motor1LPWM, 0);
-    } else if (Motor2Output < -zonaMorta) {
+    } else if (Motor1Output < zonaMortaMenor1) {
       analogWrite(motor1LPWM, abs(Motor1Output));
       analogWrite(motor1RPWM, 0);
     } else {
@@ -49,16 +54,17 @@ void loop() {
       analogWrite(motor1LPWM, 0);
     }
 
-    if (Motor2Output > zonaMorta) {
+    if (Motor2Output > zonaMortaMaior2) {
       analogWrite(motor2RPWM, Motor2Output);
       analogWrite(motor2LPWM, 0);
-    } else if (Motor2Output < -zonaMorta) {
+    } else if (Motor2Output < zonaMortaMenor2) {
       analogWrite(motor2LPWM, abs(Motor2Output));
       analogWrite(motor2RPWM, 0);
     } else {
       analogWrite(motor2RPWM, 0);
       analogWrite(motor2LPWM, 0);
     }
+    delay(10);
   } else {
     analogWrite(motor2LPWM, 0);
     analogWrite(motor1LPWM, 0);
